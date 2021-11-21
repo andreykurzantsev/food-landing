@@ -715,11 +715,11 @@ a {
     font-weight: 700
 }
 
-.showTab {
+.show {
     display: block;
 }
 
-.hideTab {
+.hide {
     display: none;
 }
 

@@ -7,8 +7,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
     let hideTabs = () => {
         tabsContent.forEach((pict) => {
-            pict.classList.remove('showTab', 'animTab');
-            pict.classList.add('hideTab');
+            pict.classList.remove('show', 'animTab');
+            pict.classList.add('hide');
         });
         tabHeader.forEach((dietName) => {
             dietName.classList.remove('tabheader__item_active');
@@ -16,8 +16,8 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     let showTab = (i = 0) => {
-        tabsContent[i].classList.remove('hideTab');
-        tabsContent[i].classList.add('showTab', 'animTab');
+        tabsContent[i].classList.remove('hide');
+        tabsContent[i].classList.add('show', 'animTab');
         tabHeader[i].classList.add('tabheader__item_active');
     }
 
@@ -89,4 +89,57 @@ window.addEventListener('DOMContentLoaded', () => {
 
     changeTimer('.timer', deadline); // call main function
 
+
+
+    //modal window
+    const openBtn = document.querySelectorAll('[data-open]'),
+        closeBtn = document.querySelector('.modal__close'),
+        modal = document.querySelector('.modal');
+
+    const openModal = () => {
+        modal.classList.remove('hide');
+        modal.classList.add('show');
+        //modal.classList.toggle('show');
+        document.body.style.overflow = 'hidden';
+        clearInterval(checkTimer);
+    };
+
+    openBtn.forEach((btn) => {
+        btn.addEventListener('click', openModal);
+    });
+
+    const closeModal = () => {
+        modal.classList.remove('show');
+        modal.classList.add('hide');
+        //modal.classList.toggle('show');
+        document.body.style.overflow = '';
+    };
+
+    const closePossibilities = () => {
+        modal.addEventListener('click', (event) => {
+            if (event.target == modal) {
+                closeModal();
+            }
+        });
+        document.addEventListener('keydown', (event) => {
+            if (event.code = 'Escape' && modal.classList.contains('show')) {
+                closeModal();
+            }
+        });
+        closeBtn.addEventListener('click', () => {
+            closeModal();
+        });
+    };
+
+    const userCheckout = () => {
+        const doc = document.documentElement;
+        if (window.pageYOffset + doc.clientHeight >= doc.scrollHeight) {
+            openModal();
+            window.removeEventListener('scroll', userCheckout);
+        }
+    }
+
+    const checkTimer = setTimeout(openModal, 5000);
+    window.addEventListener('scroll', userCheckout);
+    closePossibilities();
 });
