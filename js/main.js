@@ -145,7 +145,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     //Menu cards
     class MenuItemCreate {
-        constructor(pict, alt, subtitle, descr, price, parentSelector) {
+        constructor(pict, alt, subtitle, descr, price, parentSelector, ...classes) {
             this.container = document.querySelector('.container');
             this.menu_items = document.querySelectorAll('.menu__item');
             this.parent = document.querySelector(parentSelector);
@@ -155,6 +155,7 @@ window.addEventListener('DOMContentLoaded', () => {
             this.descr = descr;
             this.price = price;
             this.convert = 27;
+            this.classes = classes;
             this.changeToUAH();
             this.createNewElem();
         }
@@ -163,8 +164,16 @@ window.addEventListener('DOMContentLoaded', () => {
         }
         createNewElem() {
             const divBox = document.createElement('div');
+            if (this.classes.length === 0) {
+                this.element = 'menu__item'
+                divBox.classList.add(this.element);
+            } else {
+                this.classes.forEach(className => {
+                    divBox.classList.add(className);
+                });
+            }
+
             divBox.innerHTML += `
-            <div class="menu__item">
             <img src=${this.pict} alt=${this.alt}>
             <h3 class="menu__item-subtitle">${this.subtitle}</h3>
             <div class="menu__item-descr">${this.descr}</div>
@@ -172,7 +181,6 @@ window.addEventListener('DOMContentLoaded', () => {
             <div class="menu__item-price">
                 <div class="menu__item-cost">Цена:</div>
                 <div class="menu__item-total"><span>${this.price}</span> грн/день</div>
-            </div>
             </div>`
             this.parent.append(divBox);
         }
@@ -197,7 +205,10 @@ window.addEventListener('DOMContentLoaded', () => {
         'Меню "Фитнес"',
         vegDescr,
         9,
-        '.menu .container');
+        '.menu .container',
+        'menu__item',
+        'big'
+    );
 
     const elite = new MenuItemCreate(
         "img/tabs/elite.jpg",
@@ -205,7 +216,9 @@ window.addEventListener('DOMContentLoaded', () => {
         'Меню "Премиум"',
         eliteDescr,
         20,
-        '.menu .container');
+        '.menu .container',
+        'menu__item'
+    );
 
     const post = new MenuItemCreate(
         "img/tabs/post.jpg",
@@ -213,6 +226,8 @@ window.addEventListener('DOMContentLoaded', () => {
         'Меню "Постное"',
         postDescr,
         16,
-        '.menu .container');
+        '.menu .container',
+        'menu__item'
+    );
 
 });
