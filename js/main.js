@@ -243,10 +243,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
             let statusMessage = document.createElement('img');
             statusMessage.src = message.loading;
-            statusMessage.style.cssText = `
-                display: block;
-                margin: 0 auto;
-            `;
+            statusMessage.classList.add('spinner');
             form.insertAdjacentElement('afterend', statusMessage);
 
             const request = new XMLHttpRequest();
