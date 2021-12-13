@@ -1,3 +1,5 @@
+'use strict';
+
 //Tabs
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -13,13 +15,13 @@ window.addEventListener('DOMContentLoaded', () => {
         tabHeader.forEach((dietName) => {
             dietName.classList.remove('tabheader__item_active');
         });
-    }
+    };
 
     let showTab = (i = 0) => {
         tabsContent[i].classList.remove('hide');
         tabsContent[i].classList.add('show', 'animTab');
         tabHeader[i].classList.add('tabheader__item_active');
-    }
+    };
 
     let toggletabs = () => {
         tabsParent.addEventListener('click', (event) => {
@@ -33,7 +35,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 });
             }
         });
-    }
+    };
     hideTabs();
     showTab();
     toggletabs();
@@ -54,16 +56,16 @@ window.addEventListener('DOMContentLoaded', () => {
             'hours': hours,
             'minutes': minutes,
             'seconds': seconds,
-        }
+        };
     };
 
     const zeroPut = (num) => {
         if (num < 10 && num >= 0) {
-            return `0${num}`
+            return `0${num}`;
         } else {
-            return num
+            return num;
         }
-    }
+    };
 
     const changeTimer = (selector, endtime) => {
         const parentTime = document.querySelector(selector),
@@ -85,7 +87,7 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-    }
+    };
 
     changeTimer('.timer', deadline); // call main function
 
@@ -133,7 +135,7 @@ window.addEventListener('DOMContentLoaded', () => {
             openModal();
             window.removeEventListener('scroll', userCheckout);
         }
-    }
+    };
 
     const checkTimer = setTimeout(openModal, 50000);
     window.addEventListener('scroll', userCheckout);
@@ -143,7 +145,6 @@ window.addEventListener('DOMContentLoaded', () => {
     class MenuItemCreate {
         constructor(pict, alt, subtitle, descr, price, parentSelector, ...classes) {
             this.container = document.querySelector('.container');
-            this.menu_items = document.querySelectorAll('.menu__item');
             this.parent = document.querySelector(parentSelector);
             this.pict = pict;
             this.alt = alt;
@@ -161,7 +162,7 @@ window.addEventListener('DOMContentLoaded', () => {
         createNewElem() {
             const divBox = document.createElement('div');
             if (this.classes.length === 0) {
-                this.element = 'menu__item'
+                this.element = 'menu__item';
                 divBox.classList.add(this.element);
             } else {
                 this.classes.forEach(className => {
@@ -177,7 +178,7 @@ window.addEventListener('DOMContentLoaded', () => {
             <div class="menu__item-price">
                 <div class="menu__item-cost">Цена:</div>
                 <div class="menu__item-total"><span>${this.price}</span> грн/день</div>
-            </div>`
+            </div>`;
             this.parent.append(divBox);
         }
 
@@ -185,15 +186,15 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const vegDescr = `Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих
     овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной
-    ценой и высоким качеством!`
+    ценой и высоким качеством!`;
 
     const eliteDescr = `В меню “Премиум” мы используем не только красивый дизайн упаковки, но
     и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода
-    в ресторан!`
+    в ресторан!`;
 
     const postDescr = `Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие
     продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное
-    количество белков за счет тофу и импортных вегетарианских стейков.`
+    количество белков за счет тофу и импортных вегетарианских стейков.`;
 
     const veg = new MenuItemCreate(
         "img/tabs/vegy.jpg",
@@ -270,7 +271,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     showThanksModal(message.failure);
                 }
 
-            })
+            });
         });
     };
 
@@ -278,7 +279,7 @@ window.addEventListener('DOMContentLoaded', () => {
         forms.forEach((item) => {
             postData(item);
         });
-    }
+    };
     sendMessage();
 
 
