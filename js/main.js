@@ -42,7 +42,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     //Timer
 
-    let deadline = '2021-12-11';
+    let deadline = '2022-12-11';
 
     const getTimeRemaining = (endtime) => {
         let total = Date.parse(endtime) - Date.parse(new Date()),
@@ -246,31 +246,33 @@ window.addEventListener('DOMContentLoaded', () => {
             statusMessage.classList.add('spinner');
             form.insertAdjacentElement('afterend', statusMessage);
 
-            const request = new XMLHttpRequest();
-            request.open('POST', 'server.php');
-            request.setRequestHeader('Content-size', 'application/json; charset=utf8');
             const formData = new FormData(form);
-
             const objData = {};
             formData.forEach((value, key) => {
                 objData[key] = value;
             });
-            const json = JSON.stringify(objData);
-            request.send(json);
 
-            request.addEventListener('load', () => {
-                if (request.status == 200) {
-                    console.log(request.response);
-                    showThanksModal(message.success);
-                    form.reset();
-                    statusMessage.remove();
-                } else {
-                    showThanksModal(message.failure);
-                }
-
+            fetch('server.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(objData)
+            }).then(data => {
+                return data.text();
+            }).then(data => {
+                console.log(data);
+                showThanksModal(message.success);
+                statusMessage.remove();
+            }).catch(() => {
+                showThanksModal(message.failure);
+            }).finally(() => {
+                form.reset();
             });
+
         });
     };
+
 
     const sendMessage = () => {
         forms.forEach((item) => {
