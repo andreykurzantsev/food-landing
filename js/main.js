@@ -144,7 +144,6 @@ window.addEventListener('DOMContentLoaded', () => {
     //Menu cards
     class MenuItemCreate {
         constructor(pict, alt, subtitle, descr, price, parentSelector, ...classes) {
-            this.container = document.querySelector('.container');
             this.parent = document.querySelector(parentSelector);
             this.pict = pict;
             this.alt = alt;
@@ -154,7 +153,6 @@ window.addEventListener('DOMContentLoaded', () => {
             this.convert = 27;
             this.classes = classes;
             this.changeToUAH();
-            this.createNewElem();
         }
         changeToUAH() {
             this.price = this.price * this.convert;
@@ -162,8 +160,8 @@ window.addEventListener('DOMContentLoaded', () => {
         createNewElem() {
             const divBox = document.createElement('div');
             if (this.classes.length === 0) {
-                this.element = 'menu__item';
-                divBox.classList.add(this.element);
+                this.classes = 'menu__item';
+                divBox.classList.add(this.classes);
             } else {
                 this.classes.forEach(className => {
                     divBox.classList.add(className);
@@ -183,49 +181,28 @@ window.addEventListener('DOMContentLoaded', () => {
         }
 
     }
+    const getMenu = async (url) => {
+        const getReq = await fetch(url);
+        if (!getReq.ok) {
+            throw new Error(`Could not fetch ${url}, request status: ${getReq.status}`);
+        }
+        return await getReq.json();
+    };
 
-    const vegDescr = `Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих
-    овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной
-    ценой и высоким качеством!`;
+    getMenu('http://localhost:3000/menu').then(
+        (data) => {
+            data.forEach(({
+                img,
+                altimg,
+                title,
+                descr,
+                price
+            }) => {
+                new MenuItemCreate(img, altimg, title, descr, price, '.menu .container').createNewElem();
+            });
+        });
 
-    const eliteDescr = `В меню “Премиум” мы используем не только красивый дизайн упаковки, но
-    и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода
-    в ресторан!`;
 
-    const postDescr = `Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие
-    продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное
-    количество белков за счет тофу и импортных вегетарианских стейков.`;
-
-    const veg = new MenuItemCreate(
-        "img/tabs/vegy.jpg",
-        "vegy",
-        'Меню "Фитнес"',
-        vegDescr,
-        9,
-        '.menu .container',
-        'menu__item',
-        'big'
-    );
-
-    const elite = new MenuItemCreate(
-        "img/tabs/elite.jpg",
-        "elite",
-        'Меню "Премиум"',
-        eliteDescr,
-        20,
-        '.menu .container',
-        'menu__item'
-    );
-
-    const post = new MenuItemCreate(
-        "img/tabs/post.jpg",
-        "post",
-        'Меню "Постное"',
-        postDescr,
-        16,
-        '.menu .container',
-        'menu__item'
-    );
 
     //Forms
 
@@ -237,7 +214,18 @@ window.addEventListener('DOMContentLoaded', () => {
         failure: 'Что-то пошло не так',
     };
 
-    const postData = (form) => {
+    const postData = async (url, data) => {
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: data
+        });
+        return await res.json();
+    };
+
+    const bindPostData = (form) => {
         form.addEventListener('submit', (event) => {
             event.preventDefault();
 
@@ -247,20 +235,9 @@ window.addEventListener('DOMContentLoaded', () => {
             form.insertAdjacentElement('afterend', statusMessage);
 
             const formData = new FormData(form);
-            const objData = {};
-            formData.forEach((value, key) => {
-                objData[key] = value;
-            });
+            const objData = JSON.stringify(Object.fromEntries(formData.entries()));
 
-            fetch('server.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(objData)
-            }).then(data => {
-                return data.text();
-            }).then(data => {
+            postData('http://localhost:3000/requests', objData).then(data => {
                 console.log(data);
                 showThanksModal(message.success);
                 statusMessage.remove();
@@ -276,7 +253,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const sendMessage = () => {
         forms.forEach((item) => {
-            postData(item);
+            bindPostData(item);
         });
     };
     sendMessage();
